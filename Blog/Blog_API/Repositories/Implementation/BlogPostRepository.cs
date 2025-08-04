@@ -21,28 +21,30 @@ namespace Blog_API.Repositories.Implementation
         }
         public async Task<IEnumerable<Post>> GetAllAsync()
         {
-            return await dBContext.Posts.ToListAsync();
+            return await dBContext.Posts.Include(x=>x.Categories).ToListAsync();
 
         }
 
-        public async Task<Post> GetByID(int ID)
+        public async Task<Post> GetByID(Guid ID)
         {
-            return await dBContext.Posts.FirstOrDefaultAsync(x => x.Id == ID);
+            return await dBContext.Posts.Include(x => x.Categories).FirstOrDefaultAsync(x => x.Id == ID);
         }
 
 
         public async Task<Post?> UpdateAsync(Post post)
         {
-            Post existingPost = await dBContext.Posts.FirstOrDefaultAsync(x => x.Id == post.Id);
-            if (existingPost != null)
+            Post existingPost = await dBContext.Posts.Include(x => x.Categories).FirstOrDefaultAsync(x => x.Id == post.Id);
+            if (existingPost == null)
             {
-                dBContext.Entry(existingPost).CurrentValues.SetValues(post);
-                await dBContext.SaveChangesAsync();
-                return post;
+                return null; 
             }
-            return null;
+            dBContext.Entry(existingPost).CurrentValues.SetValues(post);
+            existingPost.Categories=post.Categories;
+            await dBContext.SaveChangesAsync();
+            return post;
+           
         }
-        public async Task<Post> DeleteAsync(int ID)
+        public async Task<Post> DeleteAsync(Guid ID)
         {
             Post post = await dBContext.Posts.FirstOrDefaultAsync(x => x.Id == ID);
             if (post is null)
