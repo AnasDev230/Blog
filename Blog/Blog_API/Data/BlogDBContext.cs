@@ -15,6 +15,7 @@ namespace Blog_API.Data
         public DbSet<Post> Posts { get; set; }
        
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Image> Images { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
