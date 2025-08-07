@@ -19,7 +19,7 @@ namespace Blog_API.Controllers
 
         [HttpPost]       
         
-        public async Task<IActionResult> UploadImage([FromForm] IFormFile file, 
+        public async Task<IActionResult> UploadImage(IFormFile file, 
             [FromForm] string FileName, [FromForm] string Title)
         {
             ValidateFileUpload(file);
@@ -39,12 +39,33 @@ namespace Blog_API.Controllers
                     ID = Image.ID,
                     FileExtension = Image.FileExtension,
                     FileName = Image.FileName,
-                    Title = Title,
+                    Title = Image.Title,
                     DateCreated = DateTime.Now,
+                    Url=Image.Url
                 };
                 return Ok(response);
             }
             return BadRequest(ModelState);    
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var images= await imageRepository.GetAll();
+            var response = new List<ImageDto>();
+            foreach (var Image in images)
+            {
+                response.Add(new ImageDto
+                {
+                    ID = Image.ID,
+                    FileExtension = Image.FileExtension,
+                    FileName = Image.FileName,
+                    Title = Image.Title,
+                    DateCreated = DateTime.Now,
+                    Url = Image.Url
+                });
+            }
+            return Ok(response);
         }
         private void ValidateFileUpload(IFormFile file)
         {

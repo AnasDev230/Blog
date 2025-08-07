@@ -1,6 +1,7 @@
 ﻿using Blog_API.Data;
 using Blog_API.Models.Domain;
 using Blog_API.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog_API.Repositories.Implementation
 {
@@ -18,6 +19,11 @@ namespace Blog_API.Repositories.Implementation
             this.blogDBContext = blogDBContext;
         }
 
+        public async Task<IEnumerable<Image>> GetAll()
+        {
+            return await blogDBContext.Images.ToListAsync();
+        }
+
         public async Task<Image> Upload(IFormFile file, Image image)
         {
             var localPath = Path.Combine(webHostEnvironment.ContentRootPath, "Images", $"{image.FileName}{image.FileExtension}");
@@ -28,7 +34,7 @@ namespace Blog_API.Repositories.Implementation
             var urlPath = $"{httpRequest.Scheme}://{httpRequest.Host}{httpRequest.PathBase}/Images/{image.FileName}{image.FileExtension}";
             image.Url = urlPath;
             await blogDBContext.Images.AddAsync(image);
-            await blogDBContext.SaveChangesAsync();
+            await blogDBContext.SaveChangesAsync(); 
             return image;
         }
 
