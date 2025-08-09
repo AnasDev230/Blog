@@ -21,7 +21,7 @@ builder.Services.AddDbContext<BlogDBContext>(options=>options.UseSqlServer(build
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
-
+builder.Services.AddScoped<ITokenRepository,TokenRepoistory>();
 builder.Services.AddIdentityCore<IdentityUser>().AddRoles<IdentityRole>()
     .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("Blog")
     .AddEntityFrameworkStores<BlogDBContext>()

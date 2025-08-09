@@ -4,6 +4,6 @@ namespace Blog_API.Repositories.Interface
 {
     public interface ITokenRepository
     {
-        string CreateJWTToken(IdentityUser user,List<string> roles);
+       Task<string> CreateJWTToken(IdentityUser user,List<string> roles);
     }
 }

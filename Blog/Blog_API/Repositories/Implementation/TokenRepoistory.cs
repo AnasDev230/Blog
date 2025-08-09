@@ -15,7 +15,7 @@ namespace Blog_API.Repositories.Implementation
         {
             this.configuration = configuration;
         }
-        public string CreateJWTToken(IdentityUser user, List<string> roles)
+        public async Task<string> CreateJWTToken(IdentityUser user, List<string> roles)
         {
             var claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Email, user.Email));
