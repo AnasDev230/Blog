@@ -2,6 +2,7 @@
 using Blog_API.Models.Domain;
 using Blog_API.Models.DTO;
 using Blog_API.Repositories.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,7 @@ namespace Blog_API.Controllers
         }
         [HttpPost("Add",Name ="AddCategory")]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> AddCategory([FromBody]CreateCategoryRequestDto request)
         {
             Category category = new Category
@@ -37,6 +39,7 @@ namespace Blog_API.Controllers
         }
         [HttpGet("All",Name = "GetAllCategories")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize(Roles = "Raeder,Writer")]
         public async Task<IActionResult> GetAllCategories()
         {
             var Categories=await categoryRepository.GetAllAsync();
@@ -56,6 +59,7 @@ namespace Blog_API.Controllers
         [HttpGet("GetByID/{ID}",Name = "GetCategoryByID")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Raeder,Writer")]
         public async Task<IActionResult> GetCategoryByID([FromRoute]Guid ID)
         {
             Category category=await categoryRepository.GetByID(ID);
@@ -72,6 +76,7 @@ namespace Blog_API.Controllers
         [HttpPut("{ID:Guid}", Name = "EditCategory")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> EditCategory([FromRoute]Guid ID,UpdateCategoryRequestDto updateCategoryRequestDto)
         {
             Category category = new Category
@@ -95,6 +100,7 @@ namespace Blog_API.Controllers
         [Route("{ID:Guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> DeleteCategory([FromRoute]Guid ID)
         {
             var category=await categoryRepository.DeleteAsync(ID);

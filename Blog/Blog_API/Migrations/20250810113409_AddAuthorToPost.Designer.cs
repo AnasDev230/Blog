@@ -4,6 +4,7 @@ using Blog_API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog_API.Migrations
 {
     [DbContext(typeof(BlogDBContext))]
-    partial class BlogDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250810113409_AddAuthorToPost")]
+    partial class AddAuthorToPost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,40 +42,6 @@ namespace Blog_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("Blog_API.Models.Domain.Comment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ParentCommentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("ParentCommentId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Blog_API.Models.Domain.Image", b =>
@@ -111,8 +80,10 @@ namespace Blog_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AuthorId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Content")
@@ -146,7 +117,7 @@ namespace Blog_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("AuthorId1");
 
                     b.ToTable("Posts");
                 });
@@ -197,7 +168,7 @@ namespace Blog_API.Migrations
                         {
                             Id = "5764320f-325f-45a0-a272-070d466cb321",
                             ConcurrencyStamp = "5764320f-325f-45a0-a272-070d466cb321",
-                            Name = "Reader",
+                            Name = "Raeder",
                             NormalizedName = "READER"
                         },
                         new
@@ -380,39 +351,11 @@ namespace Blog_API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Blog_API.Models.Domain.Comment", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Blog_API.Models.Domain.Comment", "ParentComment")
-                        .WithMany("Replies")
-                        .HasForeignKey("ParentCommentId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Blog_API.Models.Domain.Post", "Post")
-                        .WithMany("Comments")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-
-                    b.Navigation("ParentComment");
-
-                    b.Navigation("Post");
-                });
-
             modelBuilder.Entity("Blog_API.Models.Domain.Post", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AuthorId1");
 
                     b.Navigation("Author");
                 });
@@ -481,16 +424,6 @@ namespace Blog_API.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Blog_API.Models.Domain.Comment", b =>
-                {
-                    b.Navigation("Replies");
-                });
-
-            modelBuilder.Entity("Blog_API.Models.Domain.Post", b =>
-                {
-                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }
