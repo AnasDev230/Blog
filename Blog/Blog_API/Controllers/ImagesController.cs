@@ -61,12 +61,33 @@ namespace Blog_API.Controllers
                     FileExtension = Image.FileExtension,
                     FileName = Image.FileName,
                     Title = Image.Title,
-                    DateCreated = DateTime.Now,
+                    DateCreated = Image.DateCreated,
                     Url = Image.Url
                 });
             }
             return Ok(response);
         }
+
+        [HttpDelete("{ID:guid}")]
+        public async Task<IActionResult> DeleteImage(Guid ID)
+        {
+            var image=await imageRepository.DeleteImage(ID);
+            if (image == null)
+                return NotFound();
+            var response = new ImageDto
+            {
+                ID = image.ID,
+                FileExtension = image.FileExtension,
+                FileName = image.FileName,
+                Title = image.Title,
+                DateCreated = image.DateCreated,
+                Url = image.Url
+            };
+            return Ok(response);
+        }
+
+
+
         private void ValidateFileUpload(IFormFile file)
         {
             var allowedExtensions = new string[] { ".jpg", ".jpej", ".png" };

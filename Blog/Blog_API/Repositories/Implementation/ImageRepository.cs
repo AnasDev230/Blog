@@ -19,6 +19,18 @@ namespace Blog_API.Repositories.Implementation
             this.blogDBContext = blogDBContext;
         }
 
+        public async Task<Image> DeleteImage(Guid id)
+        {
+            var image = await blogDBContext.Images.FindAsync(id);
+            if (image == null)
+            {
+                return null;
+            }
+            blogDBContext.Images.Remove(image);
+            await blogDBContext.SaveChangesAsync();
+            return image;
+        }
+
         public async Task<IEnumerable<Image>> GetAll()
         {
             return await blogDBContext.Images.ToListAsync();

@@ -60,6 +60,7 @@ namespace Blog_API.Controllers
         [HttpGet("post/{postId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetCommentsByPostID(Guid postId)
         {
             var post = await blogPostRepository.GetByID(postId);
@@ -84,6 +85,7 @@ namespace Blog_API.Controllers
         [HttpGet("{commentId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetCommentById(Guid commentId)
         {
             var comment = await commentRepository.GetCommentByIdAsync(commentId);
@@ -104,12 +106,11 @@ namespace Blog_API.Controllers
         }
 
 
-
-
         [HttpPut("{commentId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Writer,Reader")]
         public async Task<IActionResult> UpdateComment([FromRoute]Guid commentId, [FromBody] UpdateCommentRequestDto request)
         {
             if (string.IsNullOrWhiteSpace(request.NewContent))
@@ -128,6 +129,7 @@ namespace Blog_API.Controllers
         [HttpDelete("{commentId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Writer,Reader")]
         public async Task<IActionResult> DeleteComment(Guid commentId)
         {
             var comment = await commentRepository.GetCommentByIdAsync(commentId);

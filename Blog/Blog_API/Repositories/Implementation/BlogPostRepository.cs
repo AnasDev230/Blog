@@ -19,10 +19,19 @@ namespace Blog_API.Repositories.Implementation
             await dBContext.SaveChangesAsync();
             return post;
         }
-        public async Task<IEnumerable<Post>> GetAllAsync()
+        public async Task<IEnumerable<Post>> GetAllAsync(string? filterOn = null, string? filterQuery = null)
         {
-            return await dBContext.Posts.Include(x=>x.Categories).ToListAsync();
+            var posts = dBContext.Posts.Include(x => x.Categories).AsQueryable();
+            if(string.IsNullOrWhiteSpace(filterOn)==false && string.IsNullOrWhiteSpace(filterQuery) == false)
+            {
+                if (filterOn.Equals("Title", StringComparison.OrdinalIgnoreCase))
+                {
+                    posts=posts.Where(x=>x.Title.Contains(filterQuery));
+                }
+            }
 
+            //return await dBContext.Posts.Include(x=>x.Categories).ToListAsync();
+            return await posts.ToListAsync(); 
         }
 
         public async Task<Post> GetByID(Guid ID)

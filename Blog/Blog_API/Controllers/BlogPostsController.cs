@@ -25,7 +25,7 @@ namespace Blog_API.Controllers
         }
         [HttpPost("AddPost",Name = "CreateBlogPost")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [Authorize(Roles = "Writer")]
+        //[Authorize(Roles = "Writer")]
         public async Task<IActionResult> CreateBlogPost([FromBody]CreateBlogPostRequestDto request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -72,13 +72,13 @@ namespace Blog_API.Controllers
             
         }
 
-
+        //blogposts/api/All?filterOn=Title&filterQuery=Sport
         [HttpGet("All", Name = "GetAllPosts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(Roles ="Raeder,Writer")]
-        public async Task<IActionResult> GetAllPosts()
+        //[Authorize(Roles ="Raeder,Writer")]
+        public async Task<IActionResult> GetAllPosts([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
         {
-            var Posts = await blogPostRepository.GetAllAsync();
+            var Posts = await blogPostRepository.GetAllAsync(filterOn,filterQuery);
             List<BlogPostDto> response = new List<BlogPostDto>();
             foreach (var post in Posts)
             {

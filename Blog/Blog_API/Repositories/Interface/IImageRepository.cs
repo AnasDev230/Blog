@@ -6,5 +6,6 @@ namespace Blog_API.Repositories.Interface
     {
         Task<Image>Upload(IFormFile file, Image image);
         Task<IEnumerable<Image>> GetAll();
+        Task<Image?> DeleteImage(Guid id);
     }
 }
