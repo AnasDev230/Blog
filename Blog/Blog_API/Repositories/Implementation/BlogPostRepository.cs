@@ -19,7 +19,7 @@ namespace Blog_API.Repositories.Implementation
             await dBContext.SaveChangesAsync();
             return post;
         }
-        public async Task<IEnumerable<Post>> GetAllAsync(string? filterOn = null, string? filterQuery = null)
+        public async Task<IEnumerable<Post>> GetAllAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true)
         {
             var posts = dBContext.Posts.Include(x => x.Categories).AsQueryable();
             if(string.IsNullOrWhiteSpace(filterOn)==false && string.IsNullOrWhiteSpace(filterQuery) == false)
@@ -29,8 +29,13 @@ namespace Blog_API.Repositories.Implementation
                     posts=posts.Where(x=>x.Title.Contains(filterQuery));
                 }
             }
-
-            //return await dBContext.Posts.Include(x=>x.Categories).ToListAsync();
+            if (string.IsNullOrWhiteSpace(sortBy)==false){
+                if (sortBy.Equals("Title", StringComparison.OrdinalIgnoreCase))
+                {
+                    posts = isAscending ? posts.OrderBy(x=>x.Title):posts.OrderByDescending(x => x.Title);
+                }
+            }
+            
             return await posts.ToListAsync(); 
         }
 

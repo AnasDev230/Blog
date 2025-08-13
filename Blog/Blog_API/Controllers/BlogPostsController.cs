@@ -76,13 +76,13 @@ namespace Blog_API.Controllers
         [HttpGet("All", Name = "GetAllPosts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         //[Authorize(Roles ="Raeder,Writer")]
-        public async Task<IActionResult> GetAllPosts([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
+        public async Task<IActionResult> GetAllPosts([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] bool isAscending)
         {
-            var Posts = await blogPostRepository.GetAllAsync(filterOn,filterQuery);
+            var Posts = await blogPostRepository.GetAllAsync(filterOn,filterQuery,sortBy,isAscending);
             List<BlogPostDto> response = new List<BlogPostDto>();
             foreach (var post in Posts)
             {
-                response.Add(new BlogPostDto
+                response.Add(new BlogPostDto 
                 {
                     Id = post.Id,
                     Title = post.Title,
